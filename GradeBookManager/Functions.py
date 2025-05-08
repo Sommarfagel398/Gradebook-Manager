@@ -55,6 +55,7 @@ def show_manageGrade(content_manage):
     ctk.CTkFrame(content_manage, fg_color=("#36454F"), height=750, width=1180).place(x=240, y=100)
     ctk.CTkLabel(content_manage, text="THE MANAGE GRADE 🥀", font=('Calibri', 50, 'bold')).place(x=440, y=490)
 
+<<<<<<< HEAD
 """Class Function"""
 
 def load_classes():
@@ -186,3 +187,6 @@ def show_class(content_class):
     update_class(display_frame)
 
     """https://github.com/Sommarfagel398/Gradebook-Manager.git"""
+=======
+"""https://github.com/Sommarfagel398/Gradebook-Manager.git"""
+>>>>>>> c9382d987e5843ec0d3776bb566c6856bc1aade9
