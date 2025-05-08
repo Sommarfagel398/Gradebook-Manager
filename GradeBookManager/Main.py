@@ -2,6 +2,7 @@ import customtkinter as ctk
 from PIL import Image
 import Login
 from Functions import *
+import os
 
 def open_main(username):
     window = ctk.CTk()
@@ -17,7 +18,7 @@ def open_main(username):
     ctk_image1 = ctk.CTkImage(light_image=img1, dark_image=img1, size=(500,350))
 
     """Header 🥀"""
-    top = ctk.CTkFrame(window, fg_color=("#36454F"), width=screen_width, height=80)
+    top = ctk.CTkFrame(window, fg_color=("#36454F"), width=screen_width, height=80,border_color="white",border_width=4)
     top.place(x=0, y=0)
 
     ctk.CTkLabel(top, text=f'Welcome to Grade Book Manager, {username}...',font=('Calibri', 40, 'bold'), text_color="white").place(x=15, y=15)
@@ -26,7 +27,7 @@ def open_main(username):
 
     """side bar on left"""
 
-    menu = ctk.CTkFrame(window, fg_color="#36454F", height=750, width=200, border_color="#D3D3D3", border_width=2)
+    menu = ctk.CTkFrame(window, fg_color="#36454F", height=750, width=200, border_color="#D3D3D3", border_width=4)
     menu.place(x=20, y=100)
 
     image_label = ctk.CTkLabel(menu, image=ctk_image, text="")
@@ -57,8 +58,13 @@ def open_main(username):
                                   text_color="white",height=50, width=170, hover_color="#6b828c",command=lambda: show_manageGrade(content))
     manage_Button.place(x=15, y=500)
 
+    class_Button = ctk.CTkButton(menu, text='Create a Class', fg_color="transparent", font=('Calibri', 20, 'bold'),
+                                  text_color="white", height=50, width=170, hover_color="#6b828c",
+                                  command=lambda: show_class(content))
+    class_Button.place(x=15, y=590)
+
     """content is here"""
-    content = ctk.CTkFrame(window, fg_color=("#36454F"),height=750,width=1180)
+    content = ctk.CTkFrame(window, fg_color=("#36454F"),height=750,width=1180,border_color="white",border_width=4)
     content.place(x=240,y=100)
 
     content_label = ctk.CTkLabel(content, text="Soon...", font=('Calibri',50,'bold'))
