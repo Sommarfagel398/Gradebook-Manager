@@ -30,31 +30,37 @@ def logging_in():
         else:
             messagebox.showerror("Login Failed", "Incorrect username or password.")
 
-
     login = ctk.CTk()
     login.geometry('680x300')
     login.resizable(False, False)
+    login.configure(fg_color="#202121")
     login.title('Login')
     img = Image.open("Images/GradebookMofficial.png")
     ctk_image = ctk.CTkImage(light_image=img,dark_image=img,size=(50,50))
+    img1 = Image.open("Images/ballsa.png")
+    ctk_image1 = ctk.CTkImage(light_image=img1, dark_image=img1, size=(500-50, 300-50))
 
+    frameright = ctk.CTkFrame(login,height=230,width=270,fg_color="transparent")
+    frameright.place(x=400,y=60)
+    image_masc = ctk.CTkLabel(frameright,image=ctk_image1,text="")
+    image_masc.place(x=10 - 100,y=10-20)
 
-    header = ctk.CTkFrame(login, height=50, fg_color='#36454F')
+    header = ctk.CTkFrame(login, height=50, fg_color='#323333')
     header.pack(fill="x")
     image_label = ctk.CTkLabel(header, image=ctk_image, text="")
     image_label.place(x=50,y=0)
-    ctk.CTkLabel(header, text="WELCOME TO THE GRADE BOT MANAGER", font=('Arial', 20, 'bold'),text_color="white").place(x=150,y=10)
+    ctk.CTkLabel(header, text="WELCOME TO THE GRADE BOOK MANAGER", font=('Arial', 20, 'bold'),text_color="white").place(x=150,y=10)
 
-    ctk.CTkLabel(login, text="Username:", font=('Arial', 12)).place(x=80, y=70)
-    entry_user = ctk.CTkEntry(login, width=300)
-    entry_user.place(x=200, y=70)
+    ctk.CTkLabel(login, text="Username:", font=('Calibri', 20)).place(x=50, y=100)
+    entry_user = ctk.CTkEntry(login, width=200)
+    entry_user.place(x=150, y=100)
 
-    ctk.CTkLabel(login, text="Password:", font=('Arial', 12)).place(x=80, y=140)
-    entry_password = ctk.CTkEntry(login, show="*", width=300)
-    entry_password.place(x=200, y=140)
+    ctk.CTkLabel(login, text="Password:", font=('Calibri', 20)).place(x=50, y=170)
+    entry_password = ctk.CTkEntry(login, show="*", width=200)
+    entry_password.place(x=150, y=170)
 
-    ctk.CTkButton(login, text="Login", command=login_attempt,width=100).place(x=200, y=250)
-    ctk.CTkButton(login, text="Sign up", command=lambda: [login.destroy(), Sign_up.open_signup()],width=100).place(x=380, y=250)
+    ctk.CTkButton(login, text="Login", command=login_attempt,width=80,fg_color="transparent",border_color="white",border_width=2,hover_color="#bdbdbd").place(x=150, y=250)
+    ctk.CTkButton(login, text="Sign up",  command=lambda: [login.destroy(), Sign_up.open_signup()],width=80,fg_color="transparent",border_color="white",border_width=2,hover_color="#bdbdbd").place(x=260, y=250)
 
     login.mainloop()
 

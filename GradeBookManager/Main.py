@@ -9,7 +9,7 @@ def open_main(username):
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
     window.geometry(f'{screen_width}x{screen_height}')
-    window.resizable(False, False)
+    window.configure(fg_color="#202121")
     window.title('Grade Book Manager')
     img = Image.open("Images/GradebookMofficial.png")
     img1 = Image.open("Images/amascot.png")
@@ -18,6 +18,7 @@ def open_main(username):
     ctk_image1 = ctk.CTkImage(light_image=img1, dark_image=img1, size=(500,350))
 
     """Header 🥀"""
+
     top = ctk.CTkFrame(window, fg_color=("#36454F"), width=screen_width, height=80,border_color="white",border_width=4)
     top.place(x=0, y=0)
 
@@ -27,52 +28,43 @@ def open_main(username):
 
     """side bar on left"""
 
-    menu = ctk.CTkFrame(window, fg_color="#36454F", height=750, width=200, border_color="#D3D3D3", border_width=4)
+    menu = ctk.CTkFrame(window, fg_color="#36454F", height=screen_height-180, width=220, border_color="#D3D3D3", border_width=4)
     menu.place(x=20, y=100)
 
-    image_label = ctk.CTkLabel(menu, image=ctk_image, text="")
-    image_label.place(x=45, y=10)
+    image_label = ctk.CTkButton(menu,image=ctk_image,compound="top",text=" Gradebook Manager ",fg_color="transparent",font=('Calibri', 20, 'bold'),
+                                text_color="white",height=50,width=170,hover_color="#6b828c",command=lambda : home_content(content))
+    image_label.place(x=10, y=10)
 
-    text_label = ctk.CTkLabel(menu, text="Gradebook Manager", text_color="white", font=('Calibri', 20, 'bold'))
-    text_label.place(x=12, y=120)
-
-    home_Button = ctk.CTkButton(menu, text='Home', fg_color="transparent", font=('Calibri', 20, 'bold'),
-                                 text_color="white", height=50, width=170, hover_color="#6b828c",
-                                 command=lambda: show_home(content))
-    home_Button.place(x=15, y=180)
-
-    grade_Button = ctk.CTkButton(menu,text='Grades',fg_color="transparent",font=('Calibri', 20, 'bold'),
-                                 text_color="white",height=50,width=170,hover_color="#6b828c",command=lambda: show_grade(content))
-    grade_Button.place(x=15, y=250)
-
-    student_Button = ctk.CTkButton(menu,text='Student Grades',fg_color="transparent",font=('Calibri',20,'bold'),
-                                   text_color="white",height=50,width=170,hover_color="#6b828c",command=lambda: show_student(content))
-    student_Button.place(x=15,y=330)
-
-    gradeEntry_Button = ctk.CTkButton(menu, text='Grade Entry', fg_color="transparent", font=('Calibri', 20, 'bold'),
-                                      text_color="white",height=50, width=170, hover_color="#6b828c",command=lambda: show_gradeEntry(content))
-    gradeEntry_Button.place(x=15, y=410)
-
-
-    manage_Button = ctk.CTkButton(menu, text='Manage Grades', fg_color="transparent", font=('Calibri', 20, 'bold'),
-                                  text_color="white",height=50, width=170, hover_color="#6b828c",command=lambda: show_manageGrade(content))
-    manage_Button.place(x=15, y=500)
-
-    class_Button = ctk.CTkButton(menu, text='Create a Class', fg_color="transparent", font=('Calibri', 20, 'bold'),
+    class_Button = ctk.CTkButton(menu, text="Class Management", fg_color="transparent", font=('Calibri', 20, 'bold'),
                                   text_color="white", height=50, width=170, hover_color="#6b828c",
                                   command=lambda: show_class(content))
-    class_Button.place(x=15, y=590)
+    class_Button.place(x=20, y=180)
+
+    student_Button = ctk.CTkButton(menu, text="Student Management", fg_color="transparent",
+                                   font=('Calibri', 20, 'bold'),
+                                   text_color="white", height=50, width=170, hover_color="#6b828c",
+                                   command=lambda: show_student(content))
+    student_Button.place(x=13, y=250)
+
+    student_Button = ctk.CTkButton(menu, text=f"View Students \nand Grades", fg_color="transparent",
+                                   font=('Calibri', 20, 'bold'),
+                                   text_color="white", height=50, width=170, hover_color="#6b828c",
+                                   command=lambda: view_students(content))
+    student_Button.place(x=20, y=310)
 
     """content is here"""
-    content = ctk.CTkFrame(window, fg_color=("#36454F"),height=750,width=1180,border_color="white",border_width=4)
+    content = ctk.CTkFrame(window, fg_color=("#36454F"),height=screen_height - 180,width=screen_width-250,border_color="white",border_width=2)
     content.place(x=240,y=100)
 
-    content_label = ctk.CTkLabel(content, text="Soon...", font=('Calibri',50,'bold'))
-    content_label.place(x=440,y=490)
+    frame = ctk.CTkFrame(content, fg_color="#36454F", border_color="white", border_width=2)
+    frame.place(relx=0, rely=0, relwidth=1, relheight=1)
 
-    ctk.CTkLabel(content, text="nothing can be added yet...",font=('Calibri',20,'bold')).place(x=500,y=550)
-    image_label2 = ctk.CTkLabel(content, image=ctk_image1, text="")
-    image_label2.place(x=300, y=130)
+    ctk.CTkLabel(frame, text="Welcome to GradeBook Manager", font=('Calibri', 40, 'bold')).pack(pady=40)
 
+    mascot_label = ctk.CTkLabel(frame, image=ctk_image1, text="")
+    mascot_label.pack(pady=10)
+
+    ctk.CTkLabel(frame, text="Use the sidebar to manage students, grades, and classes.",
+                 font=('Calibri', 20)).pack(pady=10)
 
     window.mainloop()
