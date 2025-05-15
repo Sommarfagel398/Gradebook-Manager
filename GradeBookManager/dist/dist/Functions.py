@@ -178,7 +178,6 @@ def show_student(content_student, username):
     entry_score.configure(validate="key", validatecommand=(validate_score_cmd, '%P'))
     entry_score.place(x=600, y=140)
 
-    # Add a title field for assignments
     ctk.CTkLabel(frame, text="Title:", font=('Calibri', 15)).place(x=520, y=180)
     entry_title = ctk.CTkEntry(frame, fg_color="#202121", placeholder_text="Assignment title",
                                width=180, font=("Calibri", 16))
@@ -466,16 +465,26 @@ def load_students(filepath):
     try:
         with open(filepath, 'r') as f:
             reader = csv.reader(f)
+<<<<<<< HEAD
             header = next(reader)
 
             for row in reader:
                 if len(row) < 5:
+=======
+            header = next(reader) 
+
+            for row in reader:
+                if len(row) < 5:  
+>>>>>>> 7818ea04c80bb4291865f9b83518231dcd4f9b07
                     continue
 
                 sid = row[0]
                 name = row[1]
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7818ea04c80bb4291865f9b83518231dcd4f9b07
                 if sid not in student_dict:
                     student_dict[sid] = {'name': name, 'assignments': []}
 
@@ -486,7 +495,6 @@ def load_students(filepath):
                     try:
                         score = int(row[4])
 
-                        # Check if this assignment already exists
                         assignment_exists = False
                         for existing_assignment in student_dict[sid]['assignments']:
                             if isinstance(existing_assignment, dict) and \
@@ -501,7 +509,7 @@ def load_students(filepath):
                                 'score': score
                             })
                     except ValueError:
-                        pass  # Skip if score is not a valid integer
+                        pass 
 
     except FileNotFoundError:
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
@@ -666,6 +674,37 @@ def get_scale_label(scale):
 
 
 
+<<<<<<< HEAD
+=======
+    with open(filepath, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "Id", "Name", "AssignmentType", "AssignmentTitle", "Score", "Average", "Scale", "Grade Point"
+        ])
+
+        for sid, data in student_dict.items():
+            if not data['assignments']:
+                writer.writerow([
+                    sid, data['name'], "", "", "", "0.00", "5.0", "Fail"
+                ])
+            else:
+                avg = get_average(student_dict, sid)
+                scale = grade_to_scale(avg)
+                label = get_scale_label(scale)
+
+                for assignment in data['assignments']:
+                    if isinstance(assignment, dict):
+                        writer.writerow([
+                            sid,
+                            data['name'],
+                            assignment['type'],
+                            assignment['title'],
+                            assignment['score'],
+                            f"{avg:.2f}",
+                            f"{scale:.1f}",
+                            label
+                        ])
+>>>>>>> 7818ea04c80bb4291865f9b83518231dcd4f9b07
 def create_student_view_textbox(parent):
     student_view = ctk.CTkTextbox(
         parent,
@@ -852,7 +891,7 @@ def get_subject_scales(student_dict, student_id):
             if isinstance(grade_item, dict):
                 subject = grade_item['subject']
                 grade = grade_item['grade']
-                scale = average_scaling(grade)  # Convert individual grade to scale
+                scale = average_scaling(grade)  
                 subject_scales[subject] = scale
 
     return subject_scales
