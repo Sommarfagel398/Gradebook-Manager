@@ -1,0 +1,15 @@
+15/05/2026  10:07 PM
+
++BUG FIXES
++le grades to scores
++legit grade book manager
+-remove batak
+
+12/05/2025 3:45 PM
+
++ Added improvements such as switching tabs
++ UI style soon
++ Added View Students
++ Added editing and renaming function in student manager
++ combo boxes
+- remove batak
