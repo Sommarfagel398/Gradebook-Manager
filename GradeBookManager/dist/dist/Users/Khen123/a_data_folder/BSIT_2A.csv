@@ -1,3 +1,2 @@
-Id,Name,AssignmentType,AssignmentTitle,Score,Average,Scale,Grade Point
-43125,Khenieth,HOMEWORK,h1,60,58.00,5.0,Fail
-43125,Khenieth,HOMEWORK,h2,56,58.00,5.0,Fail
+Id,Name,AssignmentType1,AssignmentTitle1,Score1,AssignmentType2,AssignmentTitle2,Score2,Average,Scale,Grade Point
+43125,Khenieth,HOMEWORK,h1,60,HOMEWORK,h2,56,58.00,5.0,Fail

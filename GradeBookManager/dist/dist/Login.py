@@ -1,7 +1,4 @@
-import customtkinter as ctk
 from tkinter import messagebox
-from PIL import Image
-import os
 import Sign_up
 import Main
 from Functions import *
@@ -80,11 +77,11 @@ def logging_in():
     ctk.CTkLabel(header, text="WELCOME TO THE GRADE BOOK MANAGER", font=('Arial', 20, 'bold'),
                  text_color="white").place(x=150, y=10)
 
-    ctk.CTkLabel(login, text="Username:", font=('Calibri', 20)).place(x=50, y=100)
+    ctk.CTkLabel(login, text="Username:",text_color="white", font=('Calibri', 20)).place(x=50, y=100)
     entry_user = ctk.CTkEntry(login, width=200)
     entry_user.place(x=150, y=100)
 
-    ctk.CTkLabel(login, text="Password:", font=('Calibri', 20)).place(x=50, y=170)
+    ctk.CTkLabel(login, text="Password:",text_color="white", font=('Calibri', 20)).place(x=50, y=170)
     entry_password = ctk.CTkEntry(login, show="*", width=200)
     entry_password.place(x=150, y=170)
 

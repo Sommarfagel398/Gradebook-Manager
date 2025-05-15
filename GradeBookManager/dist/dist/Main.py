@@ -1,8 +1,7 @@
-import customtkinter as ctk
-from PIL import Image, ImageTk
+from PIL import ImageTk
 import Login
 from Functions import *
-import os
+
 
 def open_main(username):
     load_classes(username)
@@ -32,8 +31,8 @@ def open_main(username):
     top.place(x=0, y=0)
 
     ctk.CTkLabel(top, text=f'Welcome to your Grade Bot Manager, {username}...',font=('Calibri', 40, 'bold'), text_color="white").place(x=15, y=15)
-    ctk.CTkButton(top, text='Log out', fg_color="transparent",font=('Calibri',20), text_color="white",hover_color="#6b828c"
-                  ,border_color="white",border_width=2, width=100, command=lambda: [window.destroy(), Login.logging_in()]).place(x=screen_width - 120, y=25)
+    ctk.CTkButton(top, text='Log out', fg_color="transparent", font=('Calibri',20), text_color="white", hover_color="#6b828c"
+                  , border_color="white", border_width=2, width=100, command=lambda: [window.destroy(), Login.logging_in()]).place(x=screen_width - 120, y=25)
 
     """side bar on left"""
 

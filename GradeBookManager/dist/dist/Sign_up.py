@@ -68,15 +68,15 @@ def open_signup():
     image_label.place(x=50, y=0)
     ctk.CTkLabel(header, text="Create a Account to log in 🗝️", font=('Arial', 20, 'bold'), text_color="white").place(x=150, y=10)
 
-    ctk.CTkLabel(sign_up, text="Username:", font=('Calibri', 18)).place(x=80, y=80)
+    ctk.CTkLabel(sign_up, text="Username:",text_color="white", font=('Calibri', 18)).place(x=80, y=80)
     entry_user = ctk.CTkEntry(sign_up, width=200)
     entry_user.place(x=180, y=80)
 
-    ctk.CTkLabel(sign_up, text="Password:", font=('Calibri', 18)).place(x=80, y=130)
+    ctk.CTkLabel(sign_up, text="Password:",text_color="white", font=('Calibri', 18)).place(x=80, y=130)
     entry_password = ctk.CTkEntry(sign_up, show="*", width=200)
     entry_password.place(x=180, y=130)
 
-    ctk.CTkLabel(sign_up, text="Confirm Password:", font=('Calibri', 18)).place(x=20, y=190)
+    ctk.CTkLabel(sign_up, text="Confirm Password:",text_color="white", font=('Calibri', 18)).place(x=20, y=190)
     Confirm_password = ctk.CTkEntry(sign_up, show="*", width=200)
     Confirm_password.place(x=180, y=190)
 

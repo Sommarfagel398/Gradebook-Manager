@@ -10,10 +10,8 @@ ctk_image1 = ctk.CTkImage(light_image=img1, dark_image=img1, size=(500, 350))
 selected_class = None
 students = {}
 
-# Replace SUBJECTS with ASSIGNMENT_TYPES
 ASSIGNMENT_TYPES = ["HOMEWORK", "QUIZ", "ACTIVITY", "PROJECT", "MIDTERM", "FINAL"]
 """home"""
-
 
 def home_content(content_home, username):
     for widget in content_home.winfo_children():
@@ -49,7 +47,6 @@ def home_content(content_home, username):
 
 
 """ view student and scores"""
-
 
 def view_students(content_view, username):
     global students, selected_class
@@ -229,7 +226,6 @@ def show_student(content_student, username):
             show_temp_message(frame, "Student ID not found", "white")
             return
 
-        # Check if assignment with same title already exists
         for assignment_entry in students[sid]['assignments']:
             if isinstance(assignment_entry, dict) and assignment_entry.get('title') == title:
                 show_temp_message(frame, f"Student already has an assignment with title '{title}'", "white")
@@ -336,7 +332,8 @@ def show_student(content_student, username):
             for assignment_item in data['assignments']:
                 if isinstance(assignment_item, dict):
                     scores_display.append(
-                        f"{assignment_item['type']} '{assignment_item['title']}': {assignment_item['score']}")
+                        f"{assignment_item['type']} '{assignment_item['title']}': {assignment_item['score']}"
+                    )
                 else:
                     scores_display.append(str(assignment_item))
 
@@ -431,7 +428,6 @@ def get_average(student_dict, student_id):
 
 """Storage parts"""
 
-
 def save_student(filepath, student_dict):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
@@ -443,12 +439,10 @@ def save_student(filepath, student_dict):
 
         for sid, data in student_dict.items():
             if not data['assignments']:
-                # Write a row with just student info if no assignments
                 writer.writerow([
                     sid, data['name'], "", "", "", "0.00", "5.0", "Fail"
                 ])
             else:
-                # Write a row for each assignment
                 avg = get_average(student_dict, sid)
                 scale = grade_to_scale(avg)
                 label = get_scale_label(scale)
@@ -472,20 +466,19 @@ def load_students(filepath):
     try:
         with open(filepath, 'r') as f:
             reader = csv.reader(f)
-            header = next(reader)  # Skip header row
+            header = next(reader)
 
             for row in reader:
-                if len(row) < 5:  # Need at least ID, name, type, title, score
+                if len(row) < 5:
                     continue
 
                 sid = row[0]
                 name = row[1]
 
-                # Create student entry if doesn't exist
+
                 if sid not in student_dict:
                     student_dict[sid] = {'name': name, 'assignments': []}
 
-                # Add assignment if it exists in the row
                 if len(row) >= 5 and row[2] and row[3] and row[4]:
                     assignment_type = row[2]
                     assignment_title = row[3]
@@ -672,39 +665,7 @@ def get_scale_label(scale):
 """data storage functions"""
 
 
-def save_student(filepath, student_dict):
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
-    with open(filepath, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            "Id", "Name", "AssignmentType", "AssignmentTitle", "Score", "Average", "Scale", "Grade Point"
-        ])
-
-        for sid, data in student_dict.items():
-            if not data['assignments']:
-                # Write a row with just student info if no assignments
-                writer.writerow([
-                    sid, data['name'], "", "", "", "0.00", "5.0", "Fail"
-                ])
-            else:
-                # Write a row for each assignment
-                avg = get_average(student_dict, sid)
-                scale = grade_to_scale(avg)
-                label = get_scale_label(scale)
-
-                for assignment in data['assignments']:
-                    if isinstance(assignment, dict):
-                        writer.writerow([
-                            sid,
-                            data['name'],
-                            assignment['type'],
-                            assignment['title'],
-                            assignment['score'],
-                            f"{avg:.2f}",
-                            f"{scale:.1f}",
-                            label
-                        ])
 def create_student_view_textbox(parent):
     student_view = ctk.CTkTextbox(
         parent,
@@ -724,7 +685,47 @@ def create_student_view_textbox(parent):
 
     return student_view
 
-def view_students(content_view, username):
+
+def update_display_for_csv_format(student_dict):
+    """Creates a formatted display string for all students with assignments on one line"""
+    display_text = ""
+
+    header = "Student ID - Name | Tasks | Assignment Scores | Average | Scale | Grade Point"
+    display_text += header + "\n"
+    display_text += "=" * len(header) + "\n\n"
+
+    if not student_dict:
+        display_text += "No students found.\n"
+        return display_text
+
+    for student_id, data in student_dict.items():
+        avg = get_average(student_dict, student_id)
+        scale = grade_to_scale(avg)
+        label = get_scale_label(scale)
+
+        scores_display = []
+        for assignment_item in data['assignments']:
+            if isinstance(assignment_item, dict):
+                scores_display.append(
+                    f"{assignment_item['type']} '{assignment_item['title']}': {assignment_item['score']}"
+                )
+            else:
+                scores_display.append(str(assignment_item))
+
+        line = f"{student_id} - {data.get('name', 'Unknown')} | "
+        line += f"Tasks: {len(data['assignments'])}/10 | "
+        line += f"Scores: {', '.join(scores_display)} | "
+        line += f"Avg: {avg:.2f} | "
+        line += f"Scale: {scale} | "
+        line += f"Grade Point: {label}"
+
+        display_text += line + "\n"
+        display_text += "-" * len(line) + "\n\n"
+
+    return display_text
+
+
+def view_students_with_unified_csv(content_view, username):
     global students, selected_class
 
     for widget in content_view.winfo_children():
@@ -733,68 +734,43 @@ def view_students(content_view, username):
     frame = ctk.CTkFrame(content_view, fg_color="#36454F", border_color="white", border_width=2)
     frame.place(relx=0, rely=0, relwidth=1, relheight=1)
 
-    ctk.CTkLabel(frame, text="Student Grades Viewer", font=('Calibri', 40, 'bold')).place(x=400, y=40)
+    ctk.CTkLabel(frame, text="Student Scores Viewer", font=('Calibri', 40, 'bold')).place(x=400, y=40)
 
     class_list = get_class_list(username)
-    selectclass = ctk.CTkComboBox(frame, fg_color="#202121", width=300, height=30, border_width=2, border_color="white")
+    selectclass = ctk.CTkComboBox(frame, fg_color="#202121", width=300, height=30,
+                                  border_width=2, border_color="white")
     selectclass.place(x=450, y=100)
 
-    if class_list:
-        selectclass.set(class_list[0])
+    status_label = ctk.CTkLabel(frame, text="", font=('Calibri', 14))
+    status_label.place(x=450, y=130)
 
-    scroll_frame = ctk.CTkFrame(frame, fg_color="#202121", width=1000, height=500, border_width=2, border_color="white")
+    scroll_frame = ctk.CTkFrame(frame, fg_color="#202121", width=1000, height=500,
+                                border_width=2, border_color="white")
     scroll_frame.place(x=80, y=150)
 
-    student_view = create_student_view_textbox(scroll_frame)
+    student_view = ctk.CTkTextbox(scroll_frame, fg_color="#202121", width=1000, height=500,
+                                  font=("Calibri", 20, "bold"))
     student_view.pack(padx=10, pady=10)
 
     def refresh_lst():
         student_view.configure(state="normal")
         student_view.delete("1.0", "end")
 
-        header = "Student ID - Name | Subjects | Grades | Average | Scale | Grade Point"
-        student_view.insert("end", header + "\n")
-        student_view.insert("end", "=" * len(header) + "\n\n")
-
-        if not students:
-            student_view.insert("end", "No students found.\n")
-            student_view.configure(state="disabled")
-            return
-
-        for student_id, data in students.items():
-            avg = get_average(students, student_id)
-            scale = grade_to_scale(avg)
-            label = get_scale_label(scale)
-
-            grades_display = []
-            for grade_item in data['grades']:
-                if isinstance(grade_item, dict):
-                    grades_display.append(f"{grade_item['subject']}: {grade_item['grade']}")
-                else:
-                    grades_display.append(str(grade_item))
-
-            line = f"{student_id} - {data.get('name', 'Unknown')} | "
-            line += f"Subjects: {len(data['grades'])}/7 | "
-            line += f"Grades: {', '.join(grades_display)} | "
-            line += f"Avg: {avg:.2f} | "
-            line += f"Scale: {scale} | "
-            line += f"Grade Point: {label}"
-
-            student_view.insert("end", line + "\n")
-            student_view.insert("end", "-" * len(line) + "\n\n")
+        display_text = update_display_for_csv_format(students)
+        student_view.insert("end", display_text)
 
         student_view.configure(state="disabled")
 
     def class_selected(choice):
         global selected_class
         selected_class = choice
+        status_label.configure(text=f"Selected class: {choice}")
         data_path = f"Users/{username}/a_data_folder/{selected_class}.csv"
         students.clear()
-        students.update(load_students(data_path))
+        loaded_students = load_students(data_path)
+        students.update(loaded_students)
+        status_label.configure(text=f"Loaded {len(loaded_students)} students from {selected_class}")
         refresh_lst()
-
-    selectclass.configure(values=class_list, command=class_selected)
-
 
     if class_list:
         selectclass.configure(values=class_list, command=class_selected)
@@ -919,88 +895,102 @@ def grade_to_scale(grade):
 
 
 def save_student(filepath, student_dict):
+    """Save students to CSV with all assignments on one line per student"""
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
-    rows_to_write = []
+    # First, determine the maximum number of assignments any student has
+    max_assignments = 0
+    for sid, data in student_dict.items():
+        max_assignments = max(max_assignments, len(data['assignments']))
 
+    # Create header row
+    header = ["Id", "Name"]
+    for i in range(max_assignments):
+        header.extend([f"AssignmentType{i + 1}", f"AssignmentTitle{i + 1}", f"Score{i + 1}"])
+    header.extend(["Average", "Scale", "Grade Point"])
+
+    # Prepare rows
+    rows = []
     for sid, data in student_dict.items():
         avg = get_average(student_dict, sid)
         scale = grade_to_scale(avg)
         label = get_scale_label(scale)
 
-        if not data['assignments']:
-            rows_to_write.append([
-                sid, data['name'], "", "", "", "0.00", "5.0", "Fail"
-            ])
-        else:
-            for assignment in data['assignments']:
-                if isinstance(assignment, dict):
-                    rows_to_write.append([
-                        sid,
-                        data['name'],
-                        assignment['type'],
-                        assignment['title'],
-                        assignment['score'],
-                        f"{avg:.2f}",
-                        f"{scale:.1f}",
-                        label
-                    ])
+        # Start with student info
+        row = [sid, data['name']]
 
+        # Add assignments
+        assignments = data['assignments']
+        for i in range(max_assignments):
+            if i < len(assignments) and isinstance(assignments[i], dict):
+                row.extend([assignments[i]['type'], assignments[i]['title'], assignments[i]['score']])
+            else:
+                row.extend(["", "", ""])  # Empty cells for missing assignments
+
+        # Add summary data
+        row.extend([f"{avg:.2f}", f"{scale:.1f}", label])
+        rows.append(row)
+
+    # Write to CSV file
     with open(filepath, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow([
-            "Id", "Name", "AssignmentType", "AssignmentTitle", "Score", "Average", "Scale", "Grade Point"
-        ])
-        writer.writerows(rows_to_write)
+        writer.writerow(header)
+        writer.writerows(rows)
+
 
 def load_students(filepath):
+    """Load students from CSV with all assignments on one line per student"""
     student_dict = {}
-    assignment_dict = {}
 
     try:
         with open(filepath, 'r') as f:
             reader = csv.reader(f)
-            header = next(reader)
+            header = next(reader)  # Get header row
 
             for row in reader:
-                if len(row) < 5:
+                if len(row) < 3:  # Need at least ID, name, and some data
                     continue
 
                 sid = row[0]
                 name = row[1]
 
+                # Create student entry if doesn't exist
                 if sid not in student_dict:
                     student_dict[sid] = {'name': name, 'assignments': []}
 
-                if sid not in assignment_dict:
-                    assignment_dict[sid] = set()
+                # Process assignments - they come in sets of 3 columns: type, title, score
+                assignment_count = (len(header) - 5) // 3  # Subtract Id, Name, Avg, Scale, Grade Point
 
-                if len(row) >= 5 and row[2] and row[3]:
-                    assignment_type = row[2]
-                    assignment_title = row[3]
+                for i in range(assignment_count):
+                    type_idx = 2 + (i * 3)
+                    title_idx = 3 + (i * 3)
+                    score_idx = 4 + (i * 3)
 
-                    if assignment_title not in assignment_dict[sid]:
-                        try:
-                            score = int(row[4])
-                            student_dict[sid]['assignments'].append({
-                                'type': assignment_type,
-                                'title': assignment_title,
-                                'score': score
-                            })
+                    if type_idx < len(row) and title_idx < len(row) and score_idx < len(row):
+                        assignment_type = row[type_idx]
+                        assignment_title = row[title_idx]
+                        score_str = row[score_idx]
 
-                            assignment_dict[sid].add(assignment_title)
-                        except ValueError:
-                            pass
+                        if assignment_type and assignment_title and score_str:
+                            try:
+                                score = int(score_str)
+                                student_dict[sid]['assignments'].append({
+                                    'type': assignment_type,
+                                    'title': assignment_title,
+                                    'score': score
+                                })
+                            except ValueError:
+                                pass
 
     except FileNotFoundError:
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         with open(filepath, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([
-                "Id", "Name", "AssignmentType", "AssignmentTitle", "Score", "Average", "Scale", "Grade Point"
-            ])
+            writer.writerow(["Id", "Name", "AssignmentType1", "AssignmentTitle1", "Score1",
+                             "Average", "Scale", "Grade Point"])
 
     return student_dict
+
 """functions sa class management"""
 
 def get_class_list(username):
