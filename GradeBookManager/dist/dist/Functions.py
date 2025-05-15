@@ -10,7 +10,6 @@ ctk_image1 = ctk.CTkImage(light_image=img1, dark_image=img1, size=(500, 350))
 selected_class = None
 students = {}
 
-# Replace SUBJECTS with ASSIGNMENT_TYPES
 ASSIGNMENT_TYPES = ["HOMEWORK", "QUIZ", "ACTIVITY", "PROJECT", "MIDTERM", "FINAL"]
 """home"""
 
@@ -181,7 +180,6 @@ def show_student(content_student, username):
     entry_score.configure(validate="key", validatecommand=(validate_score_cmd, '%P'))
     entry_score.place(x=600, y=140)
 
-    # Add a title field for assignments
     ctk.CTkLabel(frame, text="Title:", font=('Calibri', 15)).place(x=520, y=180)
     entry_title = ctk.CTkEntry(frame, fg_color="#202121", placeholder_text="Assignment title",
                                width=180, font=("Calibri", 16))
@@ -443,12 +441,10 @@ def save_student(filepath, student_dict):
 
         for sid, data in student_dict.items():
             if not data['assignments']:
-                # Write a row with just student info if no assignments
                 writer.writerow([
                     sid, data['name'], "", "", "", "0.00", "5.0", "Fail"
                 ])
             else:
-                # Write a row for each assignment
                 avg = get_average(student_dict, sid)
                 scale = grade_to_scale(avg)
                 label = get_scale_label(scale)
@@ -472,20 +468,18 @@ def load_students(filepath):
     try:
         with open(filepath, 'r') as f:
             reader = csv.reader(f)
-            header = next(reader)  # Skip header row
+            header = next(reader) 
 
             for row in reader:
-                if len(row) < 5:  # Need at least ID, name, type, title, score
+                if len(row) < 5:  
                     continue
 
                 sid = row[0]
                 name = row[1]
 
-                # Create student entry if doesn't exist
                 if sid not in student_dict:
                     student_dict[sid] = {'name': name, 'assignments': []}
 
-                # Add assignment if it exists in the row
                 if len(row) >= 5 and row[2] and row[3] and row[4]:
                     assignment_type = row[2]
                     assignment_title = row[3]
@@ -493,7 +487,6 @@ def load_students(filepath):
                     try:
                         score = int(row[4])
 
-                        # Check if this assignment already exists
                         assignment_exists = False
                         for existing_assignment in student_dict[sid]['assignments']:
                             if isinstance(existing_assignment, dict) and \
@@ -508,7 +501,7 @@ def load_students(filepath):
                                 'score': score
                             })
                     except ValueError:
-                        pass  # Skip if score is not a valid integer
+                        pass 
 
     except FileNotFoundError:
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
@@ -683,12 +676,10 @@ def save_student(filepath, student_dict):
 
         for sid, data in student_dict.items():
             if not data['assignments']:
-                # Write a row with just student info if no assignments
                 writer.writerow([
                     sid, data['name'], "", "", "", "0.00", "5.0", "Fail"
                 ])
             else:
-                # Write a row for each assignment
                 avg = get_average(student_dict, sid)
                 scale = grade_to_scale(avg)
                 label = get_scale_label(scale)
@@ -876,7 +867,7 @@ def get_subject_scales(student_dict, student_id):
             if isinstance(grade_item, dict):
                 subject = grade_item['subject']
                 grade = grade_item['grade']
-                scale = average_scaling(grade)  # Convert individual grade to scale
+                scale = average_scaling(grade)  
                 subject_scales[subject] = scale
 
     return subject_scales
